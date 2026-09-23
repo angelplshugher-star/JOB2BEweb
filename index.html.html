@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JOB2BE - More Than a Job, A Better You</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            --c-pink: #FF3F70;
+            --c-coral: #FF6B6B;
+            --c-orange: #FFA552;
+            --c-cream: #FFF7F3;
+            --c-navy: #1E293B;
+        }
+
+        body {
+            font-family: 'Noto Sans Thai', sans-serif;
+            background-color: #FAFAFA;
+            color: var(--c-navy);
+            overflow-x: hidden;
+        }
+
+        .bg-gradient-brand {
+            background: linear-gradient(135deg, var(--c-pink) 0%, var(--c-coral) 50%, var(--c-orange) 100%);
+        }
+        
+        .text-gradient-brand {
+            background: linear-gradient(135deg, var(--c-pink) 0%, var(--c-orange) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .card-shadow {
+            box-shadow: 0 10px 40px -10px rgba(255, 107, 107, 0.1);
+        }
+
+        .blob-bg {
+            position: absolute;
+            filter: blur(80px);
+            z-index: -1;
+            opacity: 0.4;
+            border-radius: 50%;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #FF6B6B; border-radius: 10px; }
+        
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Animation Classes (Replacements for tailwindcss-animate) */
+        .animate-in { animation-duration: 500ms; animation-fill-mode: both; }
+        .fade-in { animation-name: fadeIn; }
+        .slide-in-from-right-4 { animation-name: slideInRight; }
+        .slide-in-from-left-4 { animation-name: slideInLeft; }
+        .zoom-in-95 { animation-name: zoomIn; }
+
+        @keyframes fadeIn { 
+            from { opacity: 0; } 
+            to { opacity: 1; } 
+        }
+        @keyframes slideInRight { 
+            from { transform: translateX(1rem); opacity: 0; } 
+            to { transform: translateX(0); opacity: 1; } 
+        }
+        @keyframes slideInLeft { 
+            from { transform: translateX(-1rem); opacity: 0; } 
+            to { transform: translateX(0); opacity: 1; } 
+        }
+        @keyframes zoomIn { 
+            from { transform: scale(0.95); opacity: 0; } 
+            to { transform: scale(1); opacity: 1; } 
+        }
+    </style>
+</head>
+<body>
+    <div id="root" class="min-h-screen flex flex-col font-sans">
+        <!-- Rendered Content Will Be Injected Here -->
+    </div>
+
+    <script>
+        // ---------------------------------------------------------
+        // Data & Constants
+        // ---------------------------------------------------------
+        const LOGO_URL = "https://i.ibb.co/kg62Yhf3/message-Image-1789399411683.jpg";
+
+        const MOCK_JOBS = [
+            { id: 1, title: 'UX/UI Designer', company: 'TechNova Co.', location: 'Bangkok (Hybrid)', salary: '25,000 - 40,000 บาท', match: 92, type: 'Hybrid', skills: ['Figma', 'User Research', 'Prototyping'], logo: 'bg-purple-100 text-purple-600' },
+            { id: 2, title: 'Product Analyst', company: 'DataFlow Inc.', location: 'Bangkok (On-site)', salary: '28,000 - 45,000 บาท', match: 88, type: 'On-site', skills: ['SQL', 'Data Vis', 'Product Sense'], logo: 'bg-blue-100 text-blue-600' },
+            { id: 3, title: 'Marketing Executive', company: 'CreativeSpace', location: 'Remote', salary: '20,000 - 32,000 บาท', match: 81, type: 'Remote', skills: ['SEO', 'Content Strategy', 'Social Media'], logo: 'bg-orange-100 text-orange-600' },
+            { id: 4, title: 'Frontend Developer', company: 'BuildIt Fast', location: 'Bangkok (Hybrid)', salary: '30,000 - 50,000 บาท', match: 75, type: 'Hybrid', skills: ['React', 'Tailwind', 'TypeScript'], logo: 'bg-green-100 text-green-600' },
+        ];
+
+        const ASSESSMENT_QUESTIONS = [
+            { q: "หากคุณได้รับข้อมูลยอดขายที่ลดลง 20% คุณจะเริ่มวิเคราะห์จากส่วนใดก่อน?", c: ['ตรวจสอบข้อมูลว่าถูกต้องหรือไม่', 'วิเคราะห์พฤติกรรมลูกค้า', 'ดูปัจจัยภายนอก (ตลาด/คู่แข่ง)', 'ทุกข้อที่กล่าวมา'] },
+            { q: "เมื่อเพื่อนร่วมทีมมีความคิดเห็นขัดแย้งกับคุณ คุณจะจัดการอย่างไร?", c: ['หลีกเลี่ยงการโต้เถียง', 'รับฟังและพยายามหาจุดกึ่งกลางร่วมกัน', 'อธิบายเหตุผลของตนเองจนกว่าอีกฝ่ายจะยอมรับ', 'ให้หัวหน้าเป็นคนตัดสินใจ'] },
+            { q: "หากมีงานด่วนแทรกเข้ามาในขณะที่คุณมีงานเต็มมือ คุณจะทำอย่างไร?", c: ['ปฏิเสธงานด่วนทันที', 'ทำทั้งสองอย่างพร้อมกัน', 'จัดลำดับความสำคัญใหม่และแจ้งผู้ที่เกี่ยวข้อง', 'ส่งงานให้คนอื่นทำแทน'] },
+            { q: "คุณมีวิธีรับมือกับข้อเสนอแนะเชิงลบ (Negative Feedback) อย่างไร?", c: ['รู้สึกท้อแท้และเงียบไป', 'รับฟังและนำมาปรับปรุงแก้ไข', 'อธิบายเหตุผลโต้แย้งทันที', 'มองว่าเป็นเรื่องปกติและทำงานต่อไป'] },
+            { q: "เมื่อต้องเรียนรู้เครื่องมือหรือโปรแกรมใหม่ๆ คุณมักจะเริ่มจากอะไร?", c: ['รอให้บริษัทจัดอบรม', 'ค้นหาคลิปสอนใน YouTube หรือ Google', 'ถามเพื่อนร่วมงานที่ใช้เป็น', 'ลองผิดลองถูกด้วยตัวเองก่อน'] },
+            { q: "หากโปรเจกต์ที่รับผิดชอบมีโอกาสล่าช้ากว่ากำหนด คุณจะทำอย่างไร?", c: ['เร่งทำโดยไม่สนคุณภาพ', 'แจ้งหัวหน้าและประเมินระยะเวลาใหม่ทันที', 'ขอให้เพื่อนร่วมทีมช่วยโดยไม่บอกหัวหน้า', 'ทำโอทีจนกว่าจะเสร็จเพื่อหลีกเลี่ยงการโดนตำหนิ'] },
+            { q: "เมื่อเจอข้อผิดพลาดในการทำงานของตัวเอง คุณมักจะ...", c: ['พยายามแก้ไขเงียบๆ คนเดียว', 'ยอมรับผิดและรีบแจ้งผู้เกี่ยวข้องเพื่อหาทางแก้', 'หาเหตุผลหรือปัจจัยภายนอกมาอธิบาย', 'รอให้มีคนมาพบข้อผิดพลาดเอง'] },
+            { q: "เวลาเริ่มทำโปรเจกต์ใหม่ คุณชอบให้หัวหน้าสั่งการแบบไหน?", c: ['บอกขั้นตอนชัดเจน 1-2-3', 'บอกแค่เป้าหมาย แล้วให้เราหาวิธีเอง', 'ทำไปพร้อมๆ กันเป็นทีม', 'มีเอกสารให้อ่านและทำตามนั้น'] },
+            { q: "สไตล์การทำงานเป็นทีมของคุณคือแบบใด?", c: ['ผู้นำ คอยแบ่งงานและตัดสินใจ', 'ผู้ตามที่ดี ทำตามที่ได้รับมอบหมาย', 'ผู้ประสานงาน ช่วยเชื่อมโยงทุกคน', 'นักคิด คอยเสนอไอเดียใหม่ๆ'] },
+            { q: "หากได้รับโจทย์ที่ไม่เคยทำมาก่อน คุณจะทำอย่างไร?", c: ['ปฏิเสธเพราะกลัวทำพลาด', 'รับมาทำและรีบหาข้อมูลศึกษาเพิ่มเติม', 'ขอให้คนที่มีประสบการณ์ทำแทน', 'ทำตามความเข้าใจของตัวเองไปก่อน'] },
+            { q: "อะไรคือสิ่งสำคัญที่สุดในการเลือกสถานที่ทำงาน?", c: ['เงินเดือนและสวัสดิการ', 'โอกาสเติบโตและความท้าทาย', 'เพื่อนร่วมงานและหัวหน้าที่ดี', 'Work-Life Balance ยืดหยุ่นได้'] },
+            { q: "คุณจัดการกับความเครียดจากงานอย่างไร?", c: ['บ่นกับเพื่อนร่วมงาน', 'หากิจกรรมพักผ่อนหลังเลิกงาน', 'ลาพักร้อนเพื่อชาร์จพลัง', 'วิเคราะห์สาเหตุและหาทางแก้ต้นตอ'] },
+            { q: "หากพบว่าเพื่อนร่วมงานทำงานพลาด คุณจะ...", c: ['บอกหัวหน้าทันที', 'เข้าไปเตือนและช่วยแก้ไขแบบส่วนตัว', 'ปล่อยผ่านเพราะไม่ใช่หน้าที่เรา', 'นำไปพูดคุยเป็นหัวข้อในที่ประชุม'] },
+            { q: "เวลาว่างหลังเลิกงาน คุณชอบทำอะไรเพื่อพัฒนาตัวเอง?", c: ['อ่านหนังสือหรือบทความใหม่ๆ', 'ลงคอร์สเรียนออนไลน์ที่สนใจ', 'ออกไปพบปะผู้คนเพื่อแลกเปลี่ยนความคิด', 'พักผ่อนเต็มที่เพื่อเตรียมพร้อมทำงาน'] },
+            { q: "คุณชอบการประเมินผลงาน (Performance Review) แบบไหน?", c: ['ประเมินจากยอดหรือตัวเลขเป็นหลัก', 'ประเมินจากความทุ่มเทและพฤติกรรม', 'ประเมินร่วมกันระหว่างหัวหน้าและเพื่อนร่วมงาน', 'แบบไม่เป็นทางการ พูดคุยกันเรื่อยๆ'] },
+            { q: "สภาพแวดล้อมการทำงานแบบไหนที่คุณไม่ชอบที่สุด?", c: ['เจ้านายจู้จี้จุกจิก (Micromanagement)', 'ระบบงานไม่ชัดเจน เปลี่ยนแปลงตลอดเวลา', 'เพื่อนร่วมงานไม่ให้ความร่วมมือ', 'งานจำเจ ซ้ำซาก ไม่มีความท้าทาย'] },
+            { q: "คุณมองอนาคตการทำงานของตัวเองในอีก 3 ปีอย่างไร?", c: ['เป็นผู้เชี่ยวชาญในสายงาน (Specialist)', 'เป็นหัวหน้าทีม (Manager)', 'ย้ายสายงานไปลองทำสิ่งใหม่ๆ', 'เปิดธุรกิจส่วนตัว'] },
+            { q: "อะไรคือสิ่งที่ทำให้คุณอยากตื่นไปทำงานมากที่สุด?", c: ['เงินเดือนที่กำลังจะออก', 'โปรเจกต์สนุกๆ ที่รอให้ทำ', 'เพื่อนร่วมงานที่คุยถูกคอ', 'การได้เรียนรู้สิ่งใหม่ๆ ทุกวัน'] },
+        ];
+
+        // ---------------------------------------------------------
+        // SVG Icon Helpers
+        // ---------------------------------------------------------
+        const Icon = (path, { size = 24, className = '', fill = "none" } = {}) => `
+            <svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 24 24" fill="${fill}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="${className}">
+                ${path}
+            </svg>
+        `;
+
+        const I = {
+            Search: (p) => Icon('<circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>', p),
+            ChevronRight: (p) => Icon('<path d="m9 18 6-6-6-6"/>', p),
+            CheckCircle2: (p) => Icon('<circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/>', p),
+            MapPin: (p) => Icon('<path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/>', p),
+            Briefcase: (p) => Icon('<rect width="20" height="14" x="2" y="7" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>', p),
+            DollarSign: (p) => Icon('<line x1="12" x2="12" y1="2" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>', p),
+            Clock: (p) => Icon('<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>', p),
+            User: (p) => Icon('<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>', p),
+            FileText: (p) => Icon('<path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/><line x1="10" x2="8" y1="9" y2="9"/>', p),
+            BrainCircuit: (p) => Icon('<path d="M12 4.5a2.5 2.5 0 0 0-4.96-.46 2.5 2.5 0 0 0-1.98 3 2.5 2.5 0 0 0-1.32 4.24 3 3 0 0 0 .34 5.58 2.5 2.5 0 0 0 2.96 3.08 2.5 2.5 0 0 0 4.91.05L12 20V4.5Z"/>', p),
+            Heart: (p) => Icon('<path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>', p),
+            X: (p) => Icon('<line x1="18" x2="6" y1="6" y2="18"/><line x1="6" x2="18" y1="6" y2="18"/>', p),
+            ArrowLeft: (p) => Icon('<line x1="19" x2="5" y1="12" y2="12"/><polyline points="12 19 5 12 12 5"/>', p),
+            Send: (p) => Icon('<line x1="22" x2="11" y1="2" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>', p),
+            Sparkles: (p) => Icon('<path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/>', p),
+            Building2: (p) => Icon('<path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"/><path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"/><path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2"/><path d="M10 6h4"/><path d="M10 10h4"/><path d="M10 14h4"/><path d="M10 18h4"/>', p),
+            GraduationCap: (p) => Icon('<path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/>', p),
+            Laptop: (p) => Icon('<path d="M20 16V7a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v9m16 0H4m16 0 1.28 2.55a1 1 0 0 1-.9 1.45H3.62a1 1 0 0 1-.9-1.45L4 16"/>', p),
+            Eye: (p) => Icon('<path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/>', p),
+            EyeOff: (p) => Icon('<path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/><line x1="2" x2="22" y1="2" y2="22"/>', p),
+            Camera: (p) => Icon('<path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/>', p),
+            Calendar: (p) => Icon('<rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/>', p),
+            Train: (p) => Icon('<rect width="16" height="16" x="4" y="3" rx="2"/><path d="M4 11h16"/><path d="M12 3v8"/><path d="m8 19-2 3"/><path d="m18 22-2-3"/><path d="M8 15h0"/><path d="M16 15h0"/>', p),
+            Bus: (p) => Icon('<path d="M8 6v6"/><path d="M15 6v6"/><path d="M2 12h19.6"/><path d="M18 18h3s.5-1.7.8-2.8c.1-.4.2-.8.2-1.2 0-.4-.1-.8-.2-1.2l-1.4-5C20.1 6.8 19.1 6 18 6H4a2 2 0 0 0-2 2v10h3"/><circle cx="7" cy="18" r="2"/><path d="M9 18h5"/><circle cx="16" cy="18" r="2"/>', p),
+            Car: (p) => Icon('<path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/>', p),
+            Settings2: (p) => Icon('<path d="M20 7h-9"/><path d="M14 17H5"/><circle cx="17" cy="17" r="3"/><circle cx="7" cy="7" r="3"/>', p),
+            Share2: (p) => Icon('<circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/>', p),
+            Bookmark: (p) => Icon('<path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/>', p),
+            Info: (p) => Icon('<circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/>', p)
+        };
+
+        // ---------------------------------------------------------
+        // Application State
+        // ---------------------------------------------------------
+        let state = {
+            view: 'home',
+            targetView: null,
+            selectedJob: null,
+            
+            // Auth State
+            auth: { mode: 'login', regStep: 1, showPassword: false },
+            
+            // Job Search State
+            search: {
+                workType: 'ทั้งหมด', radius: 10, maxTravelTime: 45, useCurrentLoc: true,
+                transports: ['BTS'], jobCategory: '', salaryRange: '', companyType: '', location: ''
+            },
+            
+            // Job Detail State
+            jobDetail: { activeTab: 'รายละเอียด' },
+            
+            // Assessment State
+            assessment: { currentQ: 0, selectedAns: null },
+            
+            // Tracking State
+            tracking: { activeFilter: 'ทั้งหมด' }
+        };
+
+        // ---------------------------------------------------------
+        // Action Handlers
+        // ---------------------------------------------------------
+        function updateState(key, subKey, value) {
+            if (subKey !== null) state[key][subKey] = value;
+            else state[key] = value;
+            render();
+        }
+
+        function setView(viewName, target = null) {
+            state.view = viewName;
+            if (target) state.targetView = target;
+            window.scrollTo(0, 0);
+            render();
+        }
+
+        // Search Actions
+        function toggleTransport(label) {
+            if (state.search.transports.includes(label)) {
+                state.search.transports = state.search.transports.filter(t => t !== label);
+            } else {
+                state.search.transports.push(label);
+            }
+            render();
+        }
+        function resetSearch() {
+            state.search = {
+                workType: 'ทั้งหมด', radius: 10, maxTravelTime: 45, useCurrentLoc: true,
+                transports: ['BTS'], jobCategory: '', salaryRange: '', companyType: '', location: ''
+            };
+            render();
+        }
+
+        // Assessment Actions
+        function nextAssessmentQ() {
+            if (state.assessment.currentQ < ASSESSMENT_QUESTIONS.length - 1) {
+                state.assessment.currentQ++;
+                state.assessment.selectedAns = null;
+                render();
+            } else {
+                setView('assessment_result');
+            }
+        }
+
+        // ---------------------------------------------------------
+        // UI Components
+        // ---------------------------------------------------------
+        function Button({ children, variant = 'primary', className = '', onClick = '', disabled = false }) {
+            const baseStyle = "px-6 py-3 rounded-full font-medium transition-all duration-300 flex items-center justify-center gap-2";
+            const transformStyle = disabled ? "" : "transform hover:-translate-y-1 active:translate-y-0";
+            const variants = {
+                primary: "bg-gradient-brand text-white shadow-lg hover:shadow-xl shadow-pink-500/30",
+                secondary: "bg-white text-[#FF6B6B] border-2 border-pink-100 hover:border-[#FF6B6B] hover:bg-pink-50",
+                outline: "border-2 border-slate-200 text-slate-600 hover:border-[#FF6B6B] hover:text-[#FF6B6B]",
+                ghost: "text-slate-600 hover:text-[#FF6B6B] hover:bg-pink-50",
+                soft: "bg-pink-50 text-[#FF3F70] hover:bg-pink-100"
+            };
+            return `<button ${onClick ? `onclick="${onClick}"` : ''} ${disabled ? 'disabled' : ''} class="${baseStyle} ${transformStyle} ${variants[variant]} ${className}">${children}</button>`;
+        }
+
+        function Navbar() {
+            return `
+                <nav class="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-pink-50/50">
+                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+                        <div class="flex items-center gap-2 cursor-pointer" onclick="setView('home')">
+                            <img src="${LOGO_URL}" alt="JOB2BE Logo" class="h-12 w-auto mix-blend-multiply rounded-xl" />
+                        </div>
+                        
+                        <div class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-600">
+                            <button onclick="setView('home')" class="hover:text-[#FF3F70] transition-colors">หน้าแรก</button>
+                            <button onclick="setView('search_mode')" class="hover:text-[#FF3F70] transition-colors">ค้นหางาน</button>
+                            <button onclick="setView('loading', 'assessment')" class="hover:text-[#FF3F70] transition-colors">AI Career Analysis</button>
+                            <button onclick="setView('tracking')" class="hover:text-[#FF3F70] transition-colors">สถานะการสมัคร</button>
+                            <button onclick="setView('companies')" class="hover:text-[#FF3F70] transition-colors">สำหรับบริษัท</button>
+                        </div>
+
+                        <div class="flex items-center gap-4">
+                            <button class="hidden md:block text-slate-600 font-medium hover:text-[#FF3F70]" onclick="setView('auth')">เข้าสู่ระบบ</button>
+                            ${Button({ variant: 'primary', onClick: "setView('auth')", children: 'สมัครสมาชิก' })}
+                        </div>
+                    </div>
+                </nav>
+            `;
+        }
+
+        function HomeView() {
+            return `
+                <div class="animate-in fade-in duration-500">
+                    <div class="blob-bg bg-pink-300 w-[500px] h-[500px] top-[-100px] left-[-100px]"></div>
+                    <div class="blob-bg bg-orange-300 w-[400px] h-[400px] top-[200px] right-[-100px]"></div>
+
+                    <section class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-32">
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                            <div class="space-y-8 z-10">
+                                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-pink-50 text-[#FF3F70] font-medium text-sm border border-pink-100">
+                                    ${I.Sparkles({size: 16})}
+                                    <span>More Than a Job, A Better You</span>
+                                </div>
+                                <h1 class="text-5xl lg:text-7xl font-bold leading-tight">
+                                    รู้จักตัวเอง <br/>
+                                    <span class="text-gradient-brand">เจองานที่ใช่</span>
+                                </h1>
+                                <p class="text-xl text-slate-600 max-w-lg leading-relaxed">
+                                    ให้ AI ช่วยวิเคราะห์ความถนัดของคุณ และค้นหางานที่เหมาะกับคุณจริง ๆ โดยไม่ต้องเดา
+                                </p>
+
+                                <div class="bg-white p-2 rounded-full shadow-lg border border-orange-50 flex items-center gap-2 max-w-xl">
+                                    <div class="pl-4 text-slate-400">${I.Search({size: 20})}</div>
+                                    <input type="text" placeholder="ค้นหาตำแหน่งงาน บริษัท หรือ Skill..." class="w-full py-3 px-2 outline-none bg-transparent" />
+                                    ${Button({ variant: 'primary', className: 'py-3 px-8', onClick: "setView('loading', 'job_search')", children: 'ค้นหา' })}
+                                </div>
+
+                                <div class="flex items-center gap-4 pt-4">
+                                    ${Button({ variant: 'secondary', onClick: "setView('auth')", children: 'เริ่มวิเคราะห์ Skill ฟรี' })}
+                                </div>
+                            </div>
+
+                            <div class="relative h-[500px] flex justify-center items-center">
+                                <div class="absolute top-10 right-0 bg-white p-4 rounded-2xl shadow-xl border border-pink-50 animate-bounce" style="animation-duration: 3s">
+                                    <div class="flex items-center gap-3">
+                                        <div class="bg-green-100 p-2 rounded-full text-green-600">${I.CheckCircle2({size: 20})}</div>
+                                        <div>
+                                            <p class="text-xs text-slate-500 font-medium">AI Career Match</p>
+                                            <p class="font-bold text-[#1E293B]">UX/UI Designer</p>
+                                        </div>
+                                        <div class="ml-4 text-xl font-bold text-green-500">92%</div>
+                                    </div>
+                                </div>
+
+                                <div class="absolute bottom-20 left-0 bg-white p-4 rounded-2xl shadow-xl border border-orange-50 flex items-center gap-4 animate-bounce" style="animation-duration: 4s">
+                                    <div class="text-center">
+                                        <p class="text-2xl font-bold text-[#FF6B6B]">50K+</p>
+                                        <p class="text-xs text-slate-500">ผู้ใช้งาน</p>
+                                    </div>
+                                    <div class="w-px h-10 bg-slate-200"></div>
+                                    <div class="text-center">
+                                        <p class="text-2xl font-bold text-[#FFA552]">90%</p>
+                                        <p class="text-xs text-slate-500">Match สำเร็จ</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="bg-white py-24 border-t border-slate-100">
+                        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                            <div class="text-center max-w-2xl mx-auto mb-16 space-y-4">
+                                <h2 class="text-3xl lg:text-4xl font-bold">หางานไม่ควรเริ่มจากการเดา</h2>
+                                <p class="text-slate-600 text-lg">ผู้สมัครจำนวนมากประสบปัญหาเหล่านี้ JOB2BE จึงถูกสร้างมาเพื่อเปลี่ยนวิธีการหางานของคุณ</p>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                                ${[
+                                    { title: "ไม่รู้ว่าตัวเองเก่งอะไร", icon: I.User({size: 32}), color: "text-[#FF3F70]", bg: "bg-pink-50" },
+                                    { title: "ไม่รู้ว่างานไหนเหมาะ", icon: I.MapPin({size: 32}), color: "text-[#FF6B6B]", bg: "bg-rose-50" },
+                                    { title: "เสียเวลาค้นหาจากหลายที่", icon: I.Clock({size: 32}), color: "text-[#FFA552]", bg: "bg-orange-50" }
+                                ].map(item => `
+                                    <div class="bg-[#FAFAFA] p-8 rounded-3xl border border-slate-100 hover:shadow-lg transition-shadow text-center">
+                                        <div class="w-20 h-20 mx-auto ${item.bg} ${item.color} rounded-full flex items-center justify-center mb-6">
+                                            ${item.icon}
+                                        </div>
+                                        <h3 class="text-xl font-bold mb-3">${item.title}</h3>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            `;
+        }
+
+        function AuthView() {
+            const { mode, regStep, showPassword } = state.auth;
+            return `
+                <div class="min-h-screen bg-gradient-to-b from-pink-50/50 to-white py-12 px-4 flex flex-col items-center animate-in fade-in relative">
+                    <button onclick="setView('home')" class="absolute top-6 left-6 md:top-8 md:left-12 text-slate-500 hover:text-[#FF3F70] flex items-center gap-2 font-medium transition-colors z-10">
+                        ${I.ArrowLeft({size: 20})} กลับหน้าแรก
+                    </button>
+                    <img src="${LOGO_URL}" alt="JOB2BE Logo" class="h-24 mix-blend-multiply mb-2 rounded-xl mt-6" />
+                    <p class="text-slate-500 font-medium mb-8">Your Next Step A Better You</p>
+
+                    <div class="w-full max-w-md bg-white rounded-[2rem] shadow-xl border border-slate-100 p-8">
+                        <div class="flex w-full mb-8 relative border-b border-slate-200">
+                            <button 
+                                onclick="updateState('auth', 'mode', 'login'); updateState('auth', 'regStep', 1);"
+                                class="flex-1 pb-4 text-center font-bold text-lg transition-colors z-10 ${mode === 'login' ? 'text-[#FF3F70]' : 'text-slate-400 hover:text-slate-600'}"
+                            >
+                                เข้าสู่ระบบ
+                            </button>
+                            <button 
+                                onclick="updateState('auth', 'mode', 'register')"
+                                class="flex-1 pb-4 text-center font-bold text-lg transition-colors z-10 ${mode === 'register' ? 'text-[#FF3F70]' : 'text-slate-400 hover:text-slate-600'}"
+                            >
+                                ลงทะเบียน
+                            </button>
+                            <div class="absolute bottom-0 h-1 bg-gradient-brand rounded-t-full w-1/2 transition-transform duration-300 ${mode === 'login' ? 'translate-x-0' : 'translate-x-full'}"></div>
+                        </div>
+
+                        ${mode === 'login' ? `
+                            <div class="space-y-5 animate-in slide-in-from-left-4">
+                                <div class="relative">
+                                    <div class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">${I.User({size: 20})}</div>
+                                    <input type="text" placeholder="อีเมล / เบอร์โทรศัพท์" class="w-full pl-12 pr-4 py-4 bg-slate-50 rounded-2xl border border-slate-200 focus:border-[#FF6B6B] focus:bg-white outline-none" />
+                                </div>
+                                <div class="relative">
+                                    <div class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">${I.Settings2({size: 20})}</div>
+                                    <input type="${showPassword ? 'text' : 'password'}" placeholder="รหัสผ่าน" class="w-full pl-12 pr-12 py-4 bg-slate-50 rounded-2xl border border-slate-200 focus:border-[#FF6B6B] focus:bg-white outline-none" />
+                                    <button onclick="updateState('auth', 'showPassword', ${!showPassword})" class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400">
+                                        ${showPassword ? I.EyeOff({size: 20}) : I.Eye({size: 20})}
+                                    </button>
+                                </div>
+                                
+                                <div class="flex justify-between items-center text-sm font-medium">
+                                    <label class="flex items-center gap-2 cursor-pointer">
+                                        <input type="checkbox" class="w-4 h-4 rounded text-[#FF6B6B] focus:ring-[#FF6B6B] accent-[#FF6B6B]" checked />
+                                        <span class="text-slate-600">จดจำฉันไว้</span>
+                                    </label>
+                                    <button class="text-slate-500 hover:text-[#FF3F70]">ลืมรหัสผ่าน?</button>
+                                </div>
+
+                                ${Button({ className: 'w-full py-4 text-lg mt-4', onClick: "setView('search_mode')", children: `เข้าสู่ระบบ ${I.ChevronRight({size: 20})}` })}
+                                
+                                <div class="relative text-center mt-8 mb-6">
+                                    <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-slate-200"></div></div>
+                                    <span class="relative bg-white px-4 text-sm text-slate-400 font-medium">หรือเข้าสู่ระบบด้วย</span>
+                                </div>
+
+                                <div class="flex gap-4">
+                                    <button class="flex-1 py-3 flex items-center justify-center gap-2 border border-slate-200 rounded-2xl hover:bg-slate-50 font-medium text-slate-600">
+                                        <svg class="w-5 h-5" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+                                        Google
+                                    </button>
+                                    <button class="flex-1 py-3 flex items-center justify-center gap-2 border border-slate-200 rounded-2xl hover:bg-slate-50 font-medium text-slate-600">
+                                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.05 20.28c-.98.95-2.05 1.8-3.08 1.8-1.09 0-1.44-.65-2.69-.65-1.25 0-1.63.63-2.65.65-1.07.02-2.27-.93-3.26-1.95-1.4-1.47-2.73-4.14-2.73-6.68 0-3.3 2.11-5.06 4.24-5.06 1.06 0 2.06.7 2.69.7.6 0 1.76-.78 3.04-.78 1.29 0 2.4.52 3.16 1.4-2.69 1.4-2.28 5.14.39 6.22-.6 1.55-1.55 3.12-2.45 4.35H17.05zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg>
+                                        Apple
+                                    </button>
+                                </div>
+                            </div>
+                        ` : `
+                            <div class="animate-in slide-in-from-right-4">
+                                <div class="flex justify-between items-center mb-8 relative px-2">
+                                    <div class="absolute left-4 right-4 top-1/2 -translate-y-1/2 h-1 bg-slate-100 -z-10"></div>
+                                    <div class="absolute left-4 top-1/2 -translate-y-1/2 h-1 bg-[#FF6B6B] -z-10 transition-all duration-300" style="width: ${((regStep-1)/3)*100}%"></div>
+                                    
+                                    ${['ข้อมูลส่วนตัว', 'การศึกษา', 'เอกสาร', 'เสร็จสิ้น'].map((label, i) => `
+                                        <div class="flex flex-col items-center gap-2 bg-white px-2">
+                                            <div class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold border-2 transition-colors duration-300 ${regStep > i+1 ? 'bg-[#FF6B6B] border-[#FF6B6B] text-white' : regStep === i+1 ? 'border-[#FF6B6B] text-[#FF3F70]' : 'border-slate-200 text-slate-300 bg-white'}">
+                                                ${regStep > i+1 ? I.CheckCircle2({size: 16}) : i+1}
+                                            </div>
+                                            <span class="text-[10px] font-bold ${regStep >= i+1 ? 'text-slate-700' : 'text-slate-400'}">${label}</span>
+                                        </div>
+                                    `).join('')}
+                                </div>
+
+                                ${regStep === 1 ? `
+                                    <div class="space-y-4 animate-in fade-in">
+                                        <div class="flex justify-center mb-6">
+                                            <div class="w-24 h-24 bg-slate-100 rounded-full flex items-center justify-center relative border border-slate-200">
+                                                <div class="text-slate-300">${I.User({size: 40})}</div>
+                                                <button class="absolute bottom-0 right-0 bg-[#FF3F70] text-white p-2 rounded-full shadow-md hover:scale-110 transition-transform">
+                                                    ${I.Camera({size: 16})}
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="space-y-4 bg-slate-50/50 p-4 rounded-2xl border border-pink-50">
+                                            <div class="relative">
+                                                <div class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">${I.User({size: 18})}</div>
+                                                <input type="text" placeholder="ชื่อ - นามสกุล" class="w-full pl-12 pr-4 py-3 bg-white rounded-xl border border-slate-200 focus:border-[#FF6B6B] outline-none text-sm" value="แมค ลีเกรช" />
+                                            </div>
+                                            <div class="relative">
+                                                <div class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">${I.Calendar({size: 18})}</div>
+                                                <input type="text" placeholder="วันเกิด (01/01/2546)" class="w-full pl-12 pr-4 py-3 bg-white rounded-xl border border-slate-200 focus:border-[#FF6B6B] outline-none text-sm" value="01/01/2546" />
+                                            </div>
+                                            <div class="relative">
+                                                <div class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">${I.Settings2({size: 18})}</div>
+                                                <input type="tel" placeholder="เบอร์โทรศัพท์" class="w-full pl-12 pr-4 py-3 bg-white rounded-xl border border-slate-200 focus:border-[#FF6B6B] outline-none text-sm" value="081-234-5678" />
+                                            </div>
+                                            <div class="relative">
+                                                <div class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">${I.MapPin({size: 18})}</div>
+                                                <input type="text" placeholder="ที่อยู่ปัจจุบัน" class="w-full pl-12 pr-4 py-3 bg-white rounded-xl border border-slate-200 focus:border-[#FF6B6B] outline-none text-sm" value="กรุงเทพมหานคร" />
+                                            </div>
+                                        </div>
+                                        ${Button({ className: 'w-full py-4 mt-6', onClick: "updateState('auth', 'regStep', 2)", children: `ถัดไป ${I.ChevronRight({size: 18})}` })}
+                                    </div>
+                                ` : regStep === 2 ? `
+                                    <div class="space-y-4 animate-in slide-in-from-right-4 bg-slate-50/50 p-4 rounded-2xl border border-pink-50">
+                                        <div class="relative">
+                                            <div class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">${I.GraduationCap({size: 18})}</div>
+                                            <select class="w-full pl-12 pr-4 py-3 bg-white rounded-xl border border-slate-200 focus:border-[#FF6B6B] outline-none text-sm appearance-none">
+                                                <option>ปริญญาตรี</option>
+                                                <option>ปริญญาโท</option>
+                                            </select>
+                                        </div>
+                                        <div class="relative">
+                                            <div class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">${I.Building2({size: 18})}</div>
+                                            <select class="w-full pl-12 pr-4 py-3 bg-white rounded-xl border border-slate-200 focus:border-[#FF6B6B] outline-none text-sm appearance-none">
+                                                <option>จุฬาลงกรณ์มหาวิทยาลัย</option>
+                                                <option>มหาวิทยาลัยธรรมศาสตร์</option>
+                                            </select>
+                                        </div>
+                                        <div class="grid grid-cols-2 gap-4">
+                                            <div class="relative">
+                                                <select class="w-full px-4 py-3 bg-white rounded-xl border border-slate-200 focus:border-[#FF6B6B] outline-none text-sm appearance-none">
+                                                    <option>วิศวกรรมศาสตร์</option>
+                                                </select>
+                                            </div>
+                                            <div class="relative">
+                                                <select class="w-full px-4 py-3 bg-white rounded-xl border border-slate-200 focus:border-[#FF6B6B] outline-none text-sm appearance-none">
+                                                    <option>คอมพิวเตอร์</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="flex gap-4 pt-4">
+                                            ${Button({ variant: 'outline', className: 'flex-1', onClick: "updateState('auth', 'regStep', 1)", children: `${I.ArrowLeft({size: 18})} ย้อนกลับ` })}
+                                            ${Button({ className: 'flex-1', onClick: "updateState('auth', 'regStep', 3)", children: `ถัดไป ${I.ChevronRight({size: 18})}` })}
+                                        </div>
+                                    </div>
+                                ` : `
+                                    <div class="space-y-6 animate-in slide-in-from-right-4 text-center">
+                                         <div class="border-2 border-dashed border-slate-300 rounded-2xl p-12 text-center hover:bg-slate-50 transition-colors cursor-pointer bg-white">
+                                            <div class="flex justify-center text-[#FF6B6B] mb-4">${I.FileText({size: 40})}</div>
+                                            <p class="text-slate-600 font-medium">ลากไฟล์ Resume มาวางที่นี่ หรือ <span class="text-[#FF6B6B]">คลิกเพื่ออัปโหลด</span></p>
+                                            <p class="text-sm text-slate-400 mt-2">รองรับ PDF ขนาดไม่เกิน 5MB</p>
+                                        </div>
+                                        <div class="flex gap-4">
+                                            ${Button({ variant: 'outline', className: 'flex-1', onClick: "updateState('auth', 'regStep', 2)", children: `${I.ArrowLeft({size: 18})} ย้อนกลับ` })}
+                                            ${Button({ className: 'flex-1', onClick: "setView('search_mode')", children: `เสร็จสิ้น ${I.CheckCircle2({size: 18})}` })}
+                                        </div>
+                                    </div>
+                                `}
+                            </div>
+                        `}
+                    </div>
+                </div>
+            `;
+        }
+
+        function LoadingView() {
+            // Initiate auto-forwarding logic when rendering LoadingView
+            if (!window.loadingTimeoutSet) {
+                window.loadingTimeoutSet = true;
+                setTimeout(() => {
+                    window.loadingTimeoutSet = false;
+                    setView(state.targetView || 'job_search');
+                }, 2000);
+            }
+
+            return `
+                <div class="min-h-screen bg-[#FAFAFA] flex flex-col items-center justify-center animate-in fade-in py-12 px-4">
+                    <div class="relative mb-8">
+                        <div class="absolute inset-0 bg-pink-100 rounded-full animate-ping opacity-50 blur-xl"></div>
+                        <img src="https://i.ibb.co/spmHv1bW/Chat-GPT-Image-Sep-23-2026-06-14-05-AM.png" alt="Searching" class="w-64 h-64 object-contain relative z-10 animate-bounce" style="animation-duration: 2s" />
+                    </div>
+                    <h2 class="text-3xl font-bold text-[#1E293B] mb-3 text-center">กำลังค้นหางานที่ใช่สำหรับคุณ...</h2>
+                    <p class="text-slate-500 text-lg text-center">ระบบ AI กำลังวิเคราะห์ข้อมูลและคัดกรองงาน</p>
+                    
+                    <div class="mt-12 flex gap-2">
+                        <div class="w-3 h-3 bg-[#FF3F70] rounded-full animate-bounce" style="animation-delay: 0s"></div>
+                        <div class="w-3 h-3 bg-[#FF6B6B] rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+                        <div class="w-3 h-3 bg-[#FFA552] rounded-full animate-bounce" style="animation-delay: 0.4s"></div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function SearchModeView() {
+            return `
+                <div class="min-h-screen bg-gradient-to-b from-pink-50/30 to-white py-12 px-4 flex flex-col items-center animate-in fade-in">
+                    <div class="w-full max-w-md">
+                        <div class="text-center mb-8">
+                            <img src="${LOGO_URL}" alt="JOB2BE Logo" class="h-20 mx-auto mix-blend-multiply mb-4 rounded-xl" />
+                            <h2 class="text-2xl font-bold text-[#1E293B] mb-2">คุณต้องการค้นหางานแบบไหน?</h2>
+                            <p class="text-slate-500">เลือกวิธีที่เหมาะกับคุณ</p>
+                        </div>
+
+                        <div class="space-y-4 mb-8">
+                            <div class="relative p-[2px] rounded-3xl bg-gradient-brand cursor-pointer shadow-lg hover:scale-[1.02] transition-transform" onclick="setView('loading', 'assessment')">
+                                <div class="bg-white rounded-[22px] p-6 flex gap-4 h-full items-center relative overflow-hidden">
+                                    <div class="absolute top-4 right-4 w-6 h-6 rounded-full border-4 border-[#FF3F70] flex items-center justify-center">
+                                        <div class="w-3 h-3 bg-[#FF3F70] rounded-full"></div>
+                                    </div>
+                                    <div class="w-24 h-24 flex-shrink-0 bg-pink-50 rounded-2xl flex items-center justify-center relative">
+                                        <div class="text-[#FF3F70]">${I.BrainCircuit({size: 40})}</div>
+                                        <div class="absolute bottom-0 left-0 bg-[#4285F4] text-white text-xs font-bold px-2 py-1 rounded-md shadow-md">AI</div>
+                                    </div>
+                                    <div class="flex-1">
+                                        <h3 class="text-xl font-bold mb-2">ให้ AI ช่วยแนะนำ</h3>
+                                        <p class="text-sm text-slate-500 mb-3">วิเคราะห์ข้อมูลของคุณ และแนะนำงาน ตำแหน่ง บริษัท ที่เหมาะสมที่สุด</p>
+                                        <ul class="text-xs space-y-1 font-medium text-slate-600">
+                                            <li class="flex items-center gap-2"><div class="w-4 h-4 bg-[#FF3F70] text-white rounded-full flex items-center justify-center">${I.CheckCircle2({size: 10})}</div> แนะนำงานที่ตรงกับคุณ</li>
+                                            <li class="flex items-center gap-2"><div class="w-4 h-4 bg-[#FF3F70] text-white rounded-full flex items-center justify-center">${I.CheckCircle2({size: 10})}</div> ประหยัดเวลา</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="relative p-[2px] rounded-3xl bg-slate-200 cursor-pointer hover:bg-slate-300 transition-colors" onclick="setView('loading', 'job_search')">
+                                <div class="bg-white rounded-[22px] p-6 flex gap-6 h-full items-center relative">
+                                     <div class="absolute top-4 right-4 w-6 h-6 rounded-full border-2 border-slate-300"></div>
+                                    <div class="w-20 h-20 flex-shrink-0 bg-orange-50 rounded-2xl flex items-center justify-center text-[#FFA552]">
+                                        ${I.Search({size: 40})}
+                                    </div>
+                                    <div class="flex-1">
+                                        <h3 class="text-xl font-bold mb-2">ค้นหาเอง</h3>
+                                        <p class="text-sm text-slate-500 mb-2">กำหนดเงื่อนไขและค้นหางานด้วยตัวคุณเอง</p>
+                                        <ul class="text-xs space-y-1 font-medium text-slate-600">
+                                            <li class="flex items-center gap-2"><div class="text-slate-400">${I.CheckCircle2({size: 12})}</div> เลือกตำแหน่ง บริษัท พื้นที่ได้เอง</li>
+                                            <li class="flex items-center gap-2"><div class="text-slate-400">${I.CheckCircle2({size: 12})}</div> ปรับเงื่อนไขได้ละเอียด</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function JobSearchView() {
+            const s = state.search;
+            const filteredJobs = MOCK_JOBS.filter(job => {
+                if (s.workType !== 'ทั้งหมด' && job.type !== s.workType) return false;
+                return true;
+            });
+
+            return `
+                <div class="min-h-screen bg-[#FAFAFA] animate-in fade-in">
+                    <div class="bg-white border-b border-slate-200 sticky top-20 z-40">
+                        <div class="max-w-7xl mx-auto px-4 py-6">
+                            <div class="flex flex-col md:flex-row justify-between items-center gap-4 mb-4">
+                                 <h1 class="text-2xl font-bold flex items-center gap-2">
+                                    <button onclick="setView('search_mode')" class="md:hidden text-slate-500">${I.ArrowLeft({size: 24})}</button>
+                                    ค้นหางาน
+                                </h1>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="max-w-7xl mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-4 gap-8">
+                        <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm space-y-6 h-fit">
+                            <div class="flex justify-between items-center mb-2">
+                                <h2 class="font-bold text-lg">ตั้งค่าเงื่อนไขค้นหางาน</h2>
+                                <button onclick="resetSearch()" class="text-[#FF3F70] text-sm font-bold hover:underline">รีเซ็ตทั้งหมด</button>
+                            </div>
+
+                            <div class="relative">
+                                <div class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">${I.Search({size: 18})}</div>
+                                <input type="text" placeholder="ค้นหาตำแหน่งงาน / บริษัท..." class="w-full pl-12 pr-4 py-3 bg-white border border-slate-200 rounded-xl outline-none focus:border-[#FF6B6B] text-sm" />
+                            </div>
+
+                            <div class="space-y-4">
+                                <div class="border border-slate-200 rounded-xl p-3 flex justify-between items-center bg-white relative hover:border-[#FF6B6B]">
+                                    <div class="text-slate-400">${I.Briefcase({size: 18})}</div>
+                                    <select onchange="updateState('search', 'jobCategory', this.value)" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+                                        <option value="" ${!s.jobCategory ? 'selected' : ''}>เลือกตำแหน่งงาน</option>
+                                        <option value="UX/UI Designer" ${s.jobCategory === 'UX/UI Designer' ? 'selected' : ''}>UX/UI Designer</option>
+                                        <option value="Developer" ${s.jobCategory === 'Developer' ? 'selected' : ''}>Developer</option>
+                                        <option value="Data Scientist" ${s.jobCategory === 'Data Scientist' ? 'selected' : ''}>Data Scientist</option>
+                                    </select>
+                                    <div class="flex-1 ml-2 text-sm text-slate-700 truncate">${s.jobCategory || '<span class="text-slate-400">เลือกตำแหน่งงาน</span>'}</div>
+                                    <div class="text-slate-400">${I.ChevronRight({size: 18})}</div>
+                                </div>
+
+                                <div class="border border-slate-200 rounded-xl p-3 flex justify-between items-center bg-white relative hover:border-[#FF6B6B]">
+                                    <div class="text-slate-400">${I.DollarSign({size: 18})}</div>
+                                    <select onchange="updateState('search', 'salaryRange', this.value)" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+                                        <option value="" ${!s.salaryRange ? 'selected' : ''}>ช่วงเงินเดือน</option>
+                                        <option value="<20k" ${s.salaryRange === '<20k' ? 'selected' : ''}>ไม่เกิน 20,000 บาท</option>
+                                        <option value="20k-30k" ${s.salaryRange === '20k-30k' ? 'selected' : ''}>20,000 - 30,000 บาท</option>
+                                        <option value="30k-50k" ${s.salaryRange === '30k-50k' ? 'selected' : ''}>30,000 - 50,000 บาท</option>
+                                    </select>
+                                    <div class="flex-1 ml-2 text-sm text-slate-700 truncate">${s.salaryRange ? 'เลือกแล้ว' : '<span class="text-slate-400">ช่วงเงินเดือน</span>'}</div>
+                                    <div class="text-slate-400">${I.ChevronRight({size: 18})}</div>
+                                </div>
+
+                                <div>
+                                    <span class="font-medium text-sm text-slate-700 block mb-3">รูปแบบการทำงาน</span>
+                                    <div class="flex flex-wrap gap-2">
+                                        ${['ทั้งหมด', 'On-site', 'Hybrid', 'Remote'].map(type => `
+                                            <button 
+                                                onclick="updateState('search', 'workType', '${type}')"
+                                                class="px-4 py-2 rounded-full text-sm font-medium transition-all ${s.workType === type ? 'bg-[#FF3F70] text-white shadow-md' : 'bg-white border border-slate-200 text-slate-600 hover:border-[#FF6B6B]'}"
+                                            >
+                                                ${type}
+                                            </button>
+                                        `).join('')}
+                                    </div>
+                                </div>
+
+                                <div class="pt-4 border-t border-slate-100">
+                                    <span class="font-medium text-sm text-slate-700 block mb-3">การเดินทาง</span>
+                                    <div class="space-y-4">
+                                        <label class="flex items-center gap-2 text-sm text-slate-600 cursor-pointer">
+                                            <input type="checkbox" ${s.useCurrentLoc ? 'checked' : ''} onchange="updateState('search', 'useCurrentLoc', this.checked)" class="w-4 h-4 rounded text-[#FF6B6B] focus:ring-[#FF6B6B] accent-[#FF6B6B]" />
+                                            ใช้ตำแหน่งปัจจุบันของฉัน
+                                        </label>
+                                        <div class="space-y-1">
+                                            <div class="flex justify-between items-center text-sm">
+                                                <span class="text-slate-500">ระยะทาง</span>
+                                                <span class="font-bold text-[#FF3F70]" id="lbl-radius">${s.radius} กม.</span>
+                                            </div>
+                                            <input type="range" min="1" max="50" value="${s.radius}" oninput="document.getElementById('lbl-radius').innerText = this.value + ' กม.'" onchange="updateState('search', 'radius', this.value)" class="w-full accent-[#FF3F70] h-2 bg-pink-100 rounded-lg appearance-none cursor-pointer" />
+                                        </div>
+                                        <div class="space-y-1 mt-6 mb-4">
+                                            <div class="flex justify-between items-center text-sm mb-2">
+                                                <span class="text-slate-500">ระยะเวลาการเดินทาง</span>
+                                                <span class="font-bold text-[#FF3F70]" id="lbl-time">ไม่เกิน ${s.maxTravelTime} นาที</span>
+                                            </div>
+                                            <input type="range" min="10" max="120" step="5" value="${s.maxTravelTime}" oninput="document.getElementById('lbl-time').innerText = 'ไม่เกิน ' + this.value + ' นาที'" onchange="updateState('search', 'maxTravelTime', this.value)" class="w-full accent-[#FF3F70] h-2 bg-pink-100 rounded-lg appearance-none cursor-pointer" />
+                                        </div>
+                                        <div class="flex flex-wrap gap-2">
+                                            ${['BTS', 'MRT', 'รถเมล์', 'รถยนต์', 'เดินได้'].map(t => `
+                                                <button 
+                                                    onclick="toggleTransport('${t}')"
+                                                    class="px-3 py-1.5 rounded-xl text-xs font-medium transition-all flex items-center gap-1 ${s.transports.includes(t) ? 'bg-orange-50 text-orange-600 border border-orange-200 shadow-sm' : 'bg-white text-slate-500 border border-slate-200 hover:border-orange-300'}"
+                                                >
+                                                    ${t === 'BTS' ? I.Train({size: 12}) : ''}
+                                                    ${t === 'MRT' ? I.Train({size: 12}) : ''}
+                                                    ${t === 'รถเมล์' ? I.Bus({size: 12}) : ''}
+                                                    ${t === 'รถยนต์' ? I.Car({size: 12}) : ''}
+                                                    ${t}
+                                                </button>
+                                            `).join('')}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="lg:col-span-3 space-y-6">
+                            ${filteredJobs.map(job => `
+                                <div onclick="setView('job_detail')" class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:border-[#FF6B6B] transition-colors cursor-pointer flex gap-6">
+                                    <div class="w-16 h-16 rounded-xl flex items-center justify-center font-bold text-xl ${job.logo}">
+                                        ${job.company.charAt(0)}
+                                    </div>
+                                    <div class="flex-1">
+                                        <div class="flex justify-between items-start mb-2">
+                                            <div>
+                                                <h3 class="font-bold text-lg">${job.title}</h3>
+                                                <p class="text-slate-500 text-sm">${job.company}</p>
+                                            </div>
+                                            <div class="text-right">
+                                                <div class="text-green-500 font-bold text-sm bg-green-50 px-2 py-1 rounded-md mb-1">Match ${job.match}%</div>
+                                            </div>
+                                        </div>
+                                        <div class="flex flex-wrap gap-4 text-sm text-slate-600 mb-4">
+                                            <div class="flex items-center gap-1">${I.MapPin({size: 16})} ${job.location}</div>
+                                            <div class="flex items-center gap-1">${I.DollarSign({size: 16})} ${job.salary}</div>
+                                            <div class="flex items-center gap-1">${I.Briefcase({size: 16})} ${job.type}</div>
+                                        </div>
+                                        <div class="flex gap-2">
+                                            ${job.skills.map(skill => `
+                                                <span class="bg-slate-100 text-slate-600 px-3 py-1 rounded-full text-xs font-medium">${skill}</span>
+                                            `).join('')}
+                                        </div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function JobDetailView() {
+            const tabs = ['รายละเอียด', 'คุณสมบัติ', 'สวัสดิการ', 'เกี่ยวกับบริษัท'];
+            const { activeTab } = state.jobDetail;
+
+            return `
+                <div class="bg-[#FAFAFA] min-h-screen pb-32 animate-in slide-in-from-right-4">
+                    <div class="relative h-64 bg-slate-800">
+                        <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=2000" alt="Cover" class="w-full h-full object-cover opacity-50" />
+                        <div class="absolute top-4 left-4 right-4 flex justify-between">
+                            <button onclick="setView('job_search')" class="w-10 h-10 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-white/40">${I.ArrowLeft({size: 20})}</button>
+                            <div class="flex gap-2">
+                                <button class="w-10 h-10 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-white/40">${I.Bookmark({size: 20})}</button>
+                                <button class="w-10 h-10 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-white/40">${I.Share2({size: 20})}</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="max-w-3xl mx-auto px-4 -mt-16 relative z-10">
+                        <div class="bg-white rounded-t-[2rem] rounded-b-xl shadow-lg border border-slate-100 p-6 mb-2">
+                            <div class="flex justify-between items-start mb-4">
+                                <div class="w-20 h-20 rounded-2xl flex-shrink-0 flex items-center justify-center font-bold text-3xl shadow-md border-4 border-white -mt-12 bg-white text-slate-800">
+                                    SCB<span class="text-xs align-top">X</span>
+                                </div>
+                                <button class="text-pink-500 bg-pink-50 p-2 rounded-full">${I.Heart({size: 24, fill: "currentColor"})}</button>
+                            </div>
+                            <h1 class="text-2xl font-bold mb-1">Product Analyst</h1>
+                            <p class="text-lg text-slate-600 mb-6 font-medium">SCBX</p>
+                            
+                            <div class="space-y-3 text-slate-600 font-medium text-sm mb-6">
+                                <div class="flex items-center gap-3"><div class="text-slate-400">${I.MapPin({size: 18})}</div> Siam Paragon Tower, กรุงเทพมหานคร</div>
+                                <div class="flex items-center gap-3"><div class="text-slate-400">${I.Building2({size: 18})}</div> Hybrid (เข้าออฟฟิศ 2-3 วัน/สัปดาห์)</div>
+                                <div class="flex items-center gap-3"><div class="text-slate-400">${I.DollarSign({size: 18})}</div> 25,000 - 40,000 บาท</div>
+                            </div>
+                        </div>
+
+                        <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden mb-4">
+                            <div class="flex border-b border-slate-100 overflow-x-auto hide-scrollbar">
+                                ${tabs.map(tab => `
+                                    <button onclick="updateState('jobDetail', 'activeTab', '${tab}')" class="flex-1 min-w-[100px] py-4 text-sm font-bold transition-colors whitespace-nowrap ${activeTab === tab ? 'text-[#FF3F70] border-b-2 border-[#FF3F70]' : 'text-slate-500 hover:bg-slate-50'}">
+                                        ${tab}
+                                    </button>
+                                `).join('')}
+                            </div>
+                            <div class="p-6">
+                                ${activeTab === 'รายละเอียด' ? `
+                                    <div class="space-y-6 animate-in fade-in text-sm text-slate-600">
+                                        <h3 class="font-bold text-lg mb-3 text-slate-800">รายละเอียดงาน</h3>
+                                        <ul class="list-disc pl-5 space-y-2">
+                                            <li>วิเคราะห์ข้อมูลผลิตภัณฑ์เพื่อสนับสนุนการตัดสินใจทางธุรกิจ</li>
+                                            <li>จัดทำรายงานและ Dashboard เพื่อนำเสนอต่อทีมบริหาร</li>
+                                        </ul>
+                                    </div>
+                                ` : `<div class="py-8 text-center text-slate-500">ข้อมูล ${activeTab}</div>`}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 p-4 pb-8 md:pb-4 z-50">
+                        <div class="max-w-3xl mx-auto flex gap-4">
+                            ${Button({ variant: 'outline', className: 'flex-1 py-4 text-[#FF3F70] border-[#FF3F70] hover:bg-pink-50', onClick: "setView('tracking')", children: `${I.Send({size: 18})} สมัครงาน` })}
+                            ${Button({ className: 'flex-[2] py-4', onClick: "setView('company_assessment')", children: 'ทำแบบประเมินเบื้องต้น' })}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function CompanyAssessmentView() {
+            const { currentQ, selectedAns } = state.assessment;
+            const questionData = ASSESSMENT_QUESTIONS[currentQ];
+            const progressPercent = ((currentQ + 1) / ASSESSMENT_QUESTIONS.length) * 100;
+
+            return `
+                <div class="min-h-screen bg-slate-50 flex flex-col animate-in slide-in-from-right-4">
+                    <div class="bg-white px-4 py-4 flex items-center justify-between border-b border-slate-100 sticky top-0 z-10">
+                        <button onclick="setView('job_detail')" class="text-slate-500">${I.ArrowLeft({size: 24})}</button>
+                        <h1 class="font-bold text-lg">แบบประเมินเบื้องต้น</h1>
+                        <span class="font-bold text-slate-400">${currentQ + 1}/${ASSESSMENT_QUESTIONS.length}</span>
+                    </div>
+
+                    <div class="flex-1 px-4 py-6 max-w-2xl mx-auto w-full flex flex-col">
+                        <div class="w-full h-1.5 bg-slate-200 rounded-full mb-8"><div class="h-full bg-[#FF3F70] rounded-full transition-all" style="width: ${progressPercent}%"></div></div>
+
+                        <div class="flex-1 animate-in fade-in" key="${currentQ}">
+                            <h3 class="text-xl font-bold text-slate-800 leading-relaxed mb-8">${questionData.q}</h3>
+                            <div class="space-y-3">
+                                ${questionData.c.map((ans, i) => `
+                                    <button onclick="updateState('assessment', 'selectedAns', ${i})" class="w-full p-4 rounded-2xl border-2 text-left font-medium flex items-center gap-4 ${selectedAns === i ? 'border-[#FF3F70] bg-pink-50/50' : 'border-slate-200 bg-white'}">
+                                        <div class="w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${selectedAns === i ? 'border-[#FF3F70]' : 'border-slate-300'}">
+                                            ${selectedAns === i ? '<div class="w-3 h-3 bg-[#FF3F70] rounded-full"></div>' : ''}
+                                        </div>
+                                        ${ans}
+                                    </button>
+                                `).join('')}
+                            </div>
+                        </div>
+
+                        <div class="mt-8 flex gap-4">
+                            ${Button({ 
+                                className: 'flex-1 py-4 w-full', 
+                                onClick: "nextAssessmentQ()", 
+                                disabled: selectedAns === null,
+                                children: `${currentQ === ASSESSMENT_QUESTIONS.length - 1 ? 'ส่งแบบประเมิน' : 'ถัดไป'} ${I.ChevronRight({size: 20})}`
+                            })}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function AssessmentResultView() {
+            return `
+                <div class="min-h-screen bg-[#FAFAFA] py-12 px-4 animate-in zoom-in-95 duration-500">
+                     <div class="max-w-4xl mx-auto">
+                        <div class="text-center mb-12">
+                            <div class="inline-block bg-green-100 text-green-600 px-4 py-1 rounded-full text-sm font-bold mb-4 animate-pulse">วิเคราะห์เสร็จสิ้น 🎉</div>
+                            <h2 class="text-4xl font-bold mb-4">นี่คือโปรไฟล์ที่แท้จริงของคุณ</h2>
+                            <p class="text-slate-500">อิงจาก Resume และแบบทดสอบ AI</p>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                            <div class="md:col-span-1 space-y-8">
+                                <div class="bg-white rounded-[2rem] p-8 shadow-sm border border-slate-100 text-center relative overflow-hidden">
+                                    <div class="w-24 h-24 bg-pink-50 rounded-full mx-auto mb-6 flex items-center justify-center relative z-10 text-[#FF3F70]">${I.User({size: 48})}</div>
+                                    <h3 class="font-bold text-xl mb-1">นักสร้างสรรค์</h3>
+                                    <p class="text-sm text-slate-500 mb-4">The Innovator Profile</p>
+                                    <div class="w-full bg-slate-100 h-2 rounded-full mb-2"><div class="bg-[#FF6B6B] h-2 rounded-full w-[85%]"></div></div>
+                                    <p class="text-xs text-slate-400 font-medium">ความมั่นใจของ AI: 85%</p>
+                                </div>
+                            </div>
+
+                            <div class="md:col-span-2 space-y-8">
+                                <div class="bg-white rounded-[2rem] p-8 shadow-sm border border-slate-100 h-full">
+                                    <h4 class="font-bold text-lg mb-6 flex items-center gap-2"><div class="text-[#FFA552]">${I.Sparkles({size: 24})}</div> ทักษะที่โดดเด่น</h4>
+                                    <div class="flex flex-wrap gap-3">
+                                        ${['UI Design (90%)', 'User Research (85%)', 'Prototyping (80%)', 'Empathy (95%)'].map(s => `
+                                            <span class="bg-pink-50 border border-pink-100 text-[#FF3F70] px-4 py-2 rounded-xl text-sm font-bold">${s}</span>
+                                        `).join('')}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-12 text-center">
+                            ${Button({ onClick: "setView('job_search')", className: 'px-12 py-4 text-lg mx-auto', children: 'ดูงานที่เหมาะกับคุณทั้งหมด' })}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function TrackingView() {
+            const { activeFilter } = state.tracking;
+            const ALL_APPLICATIONS = [
+                { id: 1, title: 'Product Analyst', company: 'SCBX', logo: 'S', status: 'นัดสัมภาษณ์', date: '23 ก.ย. 2026', currentStep: 2, match: 88, tech: 85, culture: 90, problem: 82 },
+                { id: 2, title: 'UX/UI Designer', company: 'TechNova Co.', logo: 'T', status: 'ทำแบบประเมิน', date: '20 ก.ย. 2026', currentStep: 1, match: 92, tech: 90, culture: 95, problem: 88 },
+                { id: 3, title: 'Frontend Developer', company: 'BuildIt Fast', logo: 'B', status: 'ไม่ผ่าน', date: '15 ก.ย. 2026', currentStep: 3, match: 75, tech: 80, culture: 70, problem: 60, rejected: true },
+            ];
+
+            const filters = ['ทั้งหมด', 'ทำแบบประเมิน', 'นัดสัมภาษณ์', 'ไม่ผ่าน'];
+            
+            const filteredApps = ALL_APPLICATIONS.filter(app => {
+                if (activeFilter === 'ทั้งหมด') return true;
+                return app.status === activeFilter;
+            });
+
+            return `
+                <div class="min-h-screen bg-[#FAFAFA] animate-in fade-in py-12">
+                    <div class="max-w-5xl mx-auto px-4">
+                        <div class="mb-8"><h1 class="text-3xl font-bold mb-2">สถานะการสมัครของคุณ</h1></div>
+                        
+                        <div class="flex border-b border-slate-200 mb-8 overflow-x-auto hide-scrollbar">
+                            ${filters.map(filter => `
+                                <button 
+                                    onclick="updateState('tracking', 'activeFilter', '${filter}')" 
+                                    class="px-6 py-4 font-bold whitespace-nowrap transition-colors relative ${activeFilter === filter ? 'text-[#FF3F70]' : 'text-slate-500 hover:text-slate-700'}"
+                                >
+                                    ${filter}
+                                    ${activeFilter === filter ? '<div class="absolute bottom-0 left-0 right-0 h-0.5 bg-[#FF3F70] rounded-t-full"></div>' : ''}
+                                </button>
+                            `).join('')}
+                        </div>
+
+                        <div class="space-y-6">
+                            ${filteredApps.map(app => `
+                                <div class="bg-white p-8 rounded-[2rem] shadow-sm border relative overflow-hidden ${app.rejected ? 'border-red-100 opacity-80' : 'border-slate-200'}">
+                                    <div class="absolute top-0 right-0 px-6 py-2 rounded-bl-2xl font-bold text-sm shadow-sm border-b border-l ${
+                                        app.status === 'ไม่ผ่าน' ? 'bg-gradient-to-l from-red-100 to-red-50 text-red-600' :
+                                        app.status === 'นัดสัมภาษณ์' ? 'bg-gradient-to-l from-orange-100 to-orange-50 text-orange-600' :
+                                        'bg-gradient-to-l from-blue-100 to-blue-50 text-blue-600'
+                                    }">
+                                        ${app.status}
+                                    </div>
+                                    <div class="flex gap-6 items-start mb-12 pt-4">
+                                        <div class="w-16 h-16 rounded-2xl flex items-center justify-center font-bold text-3xl shadow-sm border border-slate-100 bg-white">${app.logo}</div>
+                                        <div>
+                                            <h3 class="text-2xl font-bold">${app.title}</h3>
+                                            <p class="text-slate-500 font-medium">${app.company}</p>
+                                        </div>
+                                    </div>
+                                    <div class="relative">
+                                        <div class="absolute top-5 left-8 right-8 h-1.5 bg-slate-100 rounded-full -z-10"></div>
+                                        <div class="absolute top-5 left-8 h-1.5 rounded-full -z-10 transition-all duration-500 ${app.rejected ? 'bg-red-300' : 'bg-gradient-brand'}" style="width: ${(app.currentStep/3)*100}%"></div>
+                                        <div class="flex justify-between relative">
+                                            ${['ส่งใบสมัคร', 'ทำแบบประเมิน', 'นัดสัมภาษณ์', 'ผลการคัดเลือก'].map((text, i) => {
+                                                const isCurrent = app.currentStep === i;
+                                                const isPast = app.currentStep > i;
+                                                const isRejectedStep = app.rejected && i === app.currentStep;
+                                                
+                                                let circleClass = 'bg-slate-100 text-slate-300 border-white';
+                                                if (isRejectedStep) circleClass = 'bg-red-500 text-white border-red-100';
+                                                else if (isPast || isCurrent) circleClass = 'bg-[#FF3F70] text-white border-pink-100';
+
+                                                return `
+                                                    <div class="flex flex-col items-center gap-3 w-24 text-center">
+                                                        <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm border-4 shadow-md ${circleClass}">
+                                                            ${isRejectedStep ? I.X({size: 18}) : (isPast ? I.CheckCircle2({size: 18}) : i+1)}
+                                                        </div>
+                                                        <span class="text-xs md:text-sm font-bold ${isRejectedStep ? 'text-red-500' : (isPast || isCurrent ? 'text-slate-700' : 'text-slate-400')}">${text}</span>
+                                                    </div>
+                                                `;
+                                            }).join('')}
+                                        </div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <button class="fixed bottom-6 right-6 group flex items-center gap-2 bg-white p-2 pr-2 rounded-full shadow-[0_10px_40px_-10px_rgba(255,63,112,0.3)] border border-pink-100 hover:scale-105 transition-all z-50">
+                        <img src="https://i.ibb.co/23zcMks2/Chat-GPT-Image-Sep-23-2026-06-03-37-AM.png" alt="Help" class="w-12 h-12 rounded-full object-cover" />
+                        <span class="font-bold text-slate-700 text-sm overflow-hidden whitespace-nowrap max-w-0 group-hover:max-w-[200px] transition-all duration-500 ease-in-out px-0 group-hover:px-3">
+                            สอบถามหรือขอความช่วยเหลือ
+                        </span>
+                    </button>
+                </div>
+            `;
+        }
+
+        function CompaniesView() {
+            return `
+                <div class="animate-in fade-in">
+                    <section class="bg-slate-900 text-white pt-24 pb-32 px-4 text-center">
+                        <h1 class="text-5xl font-bold mb-6">ค้นหาคนที่ใช่ <span class="text-[#FF3F70]">ง่ายกว่าที่เคย</span></h1>
+                        <p class="text-xl text-slate-300 max-w-2xl mx-auto mb-12">ลดเวลาคัดกรองด้วย AI Skill Matching</p>
+                        ${Button({ className: 'mx-auto bg-white text-slate-900 text-lg py-4 px-8', children: 'ลงประกาศงาน (ฟรี)' })}
+                    </section>
+                </div>
+            `;
+        }
+
+        // ---------------------------------------------------------
+        // Main Render Cycle
+        // ---------------------------------------------------------
+        function render() {
+            const root = document.getElementById('root');
+            let content = '';
+
+            // Render Navbar if not in specific views
+            if (!['auth', 'search_mode', 'assessment', 'company_assessment', 'job_detail'].includes(state.view)) {
+                content += Navbar();
+            }
+
+            content += '<main class="flex-grow">';
+            switch(state.view) {
+                case 'home': content += HomeView(); break;
+                case 'auth': content += AuthView(); break;
+                case 'search_mode': content += SearchModeView(); break;
+                case 'job_search': content += JobSearchView(); break;
+                case 'job_detail': content += JobDetailView(); break;
+                case 'assessment': 
+                case 'assessment_result': content += AssessmentResultView(); break;
+                case 'company_assessment': content += CompanyAssessmentView(); break;
+                case 'tracking': content += TrackingView(); break;
+                case 'companies': content += CompaniesView(); break;
+                case 'loading': content += LoadingView(); break;
+                default: content += HomeView();
+            }
+            content += '</main>';
+
+            root.innerHTML = content;
+        }
+
+        // Initial render
+        render();
+
+    </script>
+</body>
+</html>
