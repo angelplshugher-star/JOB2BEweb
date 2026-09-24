@@ -88,10 +88,10 @@
         const LOGO_URL = "https://i.ibb.co/kg62Yhf3/message-Image-1789399411683.jpg";
 
         const MOCK_JOBS = [
-            { id: 1, title: 'UX/UI Designer', company: 'TechNova Co.', location: 'Bangkok (Hybrid)', salary: '25,000 - 40,000 บาท', match: 92, type: 'Hybrid', skills: ['Figma', 'User Research', 'Prototyping'], logo: 'bg-purple-100 text-purple-600' },
-            { id: 2, title: 'Product Analyst', company: 'DataFlow Inc.', location: 'Bangkok (On-site)', salary: '28,000 - 45,000 บาท', match: 88, type: 'On-site', skills: ['SQL', 'Data Vis', 'Product Sense'], logo: 'bg-blue-100 text-blue-600' },
-            { id: 3, title: 'Marketing Executive', company: 'CreativeSpace', location: 'Remote', salary: '20,000 - 32,000 บาท', match: 81, type: 'Remote', skills: ['SEO', 'Content Strategy', 'Social Media'], logo: 'bg-orange-100 text-orange-600' },
-            { id: 4, title: 'Frontend Developer', company: 'BuildIt Fast', location: 'Bangkok (Hybrid)', salary: '30,000 - 50,000 บาท', match: 75, type: 'Hybrid', skills: ['React', 'Tailwind', 'TypeScript'], logo: 'bg-green-100 text-green-600' },
+            { id: 1, title: 'UX/UI Designer', company: 'TechNova Co.', location: 'Bangkok (Hybrid)', salary: '฿25,000 - 40,000', match: 92, type: 'Hybrid', skills: ['Figma', 'User Research', 'Prototyping'], logo: 'bg-purple-100 text-purple-600' },
+            { id: 2, title: 'Product Analyst', company: 'DataFlow Inc.', location: 'Bangkok (On-site)', salary: '฿28,000 - 45,000', match: 88, type: 'On-site', skills: ['SQL', 'Data Vis', 'Product Sense'], logo: 'bg-blue-100 text-blue-600' },
+            { id: 3, title: 'Marketing Executive', company: 'CreativeSpace', location: 'Remote', salary: '฿20,000 - 32,000', match: 81, type: 'Remote', skills: ['SEO', 'Content Strategy', 'Social Media'], logo: 'bg-orange-100 text-orange-600' },
+            { id: 4, title: 'Frontend Developer', company: 'BuildIt Fast', location: 'Bangkok (Hybrid)', salary: '฿30,000 - 50,000', match: 75, type: 'Hybrid', skills: ['React', 'Tailwind', 'TypeScript'], logo: 'bg-green-100 text-green-600' },
         ];
 
         const ASSESSMENT_QUESTIONS = [
@@ -127,7 +127,7 @@
             CheckCircle2: (p) => Icon('<circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/>', p),
             MapPin: (p) => Icon('<path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/>', p),
             Briefcase: (p) => Icon('<rect width="20" height="14" x="2" y="7" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>', p),
-            DollarSign: (p) => Icon('<line x1="12" x2="12" y1="2" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>', p),
+            BahtSign: (p = {}) => `<span class="inline-flex items-center justify-center font-bold ${p.className || ''}" style="font-size: ${(p.size || 24) * 0.9}px; width: ${p.size || 24}px; height: ${p.size || 24}px; line-height: 1;">฿</span>`,
             Clock: (p) => Icon('<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>', p),
             User: (p) => Icon('<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>', p),
             FileText: (p) => Icon('<path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/><line x1="10" x2="8" y1="9" y2="9"/>', p),
@@ -202,13 +202,6 @@
 
         function setSupportSubView(view) {
             state.supportSubView = view;
-            render();
-        }
-
-        function setView(viewName, target = null) {
-            state.view = viewName;
-            if (target) state.targetView = target;
-            window.scrollTo(0, 0);
             render();
         }
 
@@ -614,143 +607,222 @@
             const s = state.search;
             const filteredJobs = MOCK_JOBS.filter(job => {
                 if (s.workType !== 'ทั้งหมด' && job.type !== s.workType) return false;
+                if (s.location && !job.location.includes(s.location) && s.location !== '') return false;
+                if (s.jobCategory && !job.title.includes(s.jobCategory) && s.jobCategory !== '') return false;
                 return true;
             });
 
+            const formatSalaryLabel = (val) => {
+                if (!val) return '<span class="text-slate-400">ช่วงเงินเดือน</span>';
+                if (val === '<20k') return 'ไม่เกิน ฿20,000';
+                if (val === '20k-30k') return '฿20,000 - 30,000';
+                if (val === '30k-50k') return '฿30,000 - 50,000';
+                return val;
+            };
+
             return `
-                <div class="min-h-screen bg-[#FAFAFA] animate-in fade-in">
+                <div class="min-h-screen bg-[#FAFAFA] animate-in fade-in pb-20">
                     <div class="bg-white border-b border-slate-200 sticky top-20 z-40">
-                        <div class="max-w-7xl mx-auto px-4 py-6">
-                            <div class="flex flex-col md:flex-row justify-between items-center gap-4 mb-4">
-                                 <h1 class="text-2xl font-bold flex items-center gap-2">
-                                    <button onclick="setView('search_mode')" class="md:hidden text-slate-500">${I.ArrowLeft({size: 24})}</button>
-                                    ค้นหางาน
-                                </h1>
+                        <div class="max-w-7xl mx-auto px-4 py-4">
+                            <div class="flex items-center gap-4">
+                                 <button onclick="setView('search_mode')" class="text-slate-500 hover:text-[#FF3F70] transition-colors p-2 -ml-2 rounded-full hover:bg-pink-50">
+                                    ${I.ArrowLeft({size: 24})}
+                                 </button>
+                                 <h1 class="text-2xl font-bold">ค้นหางาน</h1>
                             </div>
                         </div>
                     </div>
 
-                    <div class="max-w-7xl mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-4 gap-8">
-                        <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm space-y-6 h-fit">
-                            <div class="flex justify-between items-center mb-2">
-                                <h2 class="font-bold text-lg">ตั้งค่าเงื่อนไขค้นหางาน</h2>
-                                <button onclick="resetSearch()" class="text-[#FF3F70] text-sm font-bold hover:underline">รีเซ็ตทั้งหมด</button>
-                            </div>
-
-                            <div class="relative">
-                                <div class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">${I.Search({size: 18})}</div>
-                                <input type="text" placeholder="ค้นหาตำแหน่งงาน / บริษัท..." class="w-full pl-12 pr-4 py-3 bg-white border border-slate-200 rounded-xl outline-none focus:border-[#FF6B6B] text-sm" />
-                            </div>
-
-                            <div class="space-y-4">
-                                <div class="border border-slate-200 rounded-xl p-3 flex justify-between items-center bg-white relative hover:border-[#FF6B6B]">
-                                    <div class="text-slate-400">${I.Briefcase({size: 18})}</div>
-                                    <select onchange="updateState('search', 'jobCategory', this.value)" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
-                                        <option value="" ${!s.jobCategory ? 'selected' : ''}>เลือกตำแหน่งงาน</option>
-                                        <option value="UX/UI Designer" ${s.jobCategory === 'UX/UI Designer' ? 'selected' : ''}>UX/UI Designer</option>
-                                        <option value="Developer" ${s.jobCategory === 'Developer' ? 'selected' : ''}>Developer</option>
-                                        <option value="Data Scientist" ${s.jobCategory === 'Data Scientist' ? 'selected' : ''}>Data Scientist</option>
-                                    </select>
-                                    <div class="flex-1 ml-2 text-sm text-slate-700 truncate">${s.jobCategory || '<span class="text-slate-400">เลือกตำแหน่งงาน</span>'}</div>
-                                    <div class="text-slate-400">${I.ChevronRight({size: 18})}</div>
+                    <div class="max-w-7xl mx-auto px-4 py-8 space-y-8">
+                        
+                        <!-- SMART ROUTING (KEY FEATURE) - MOVED TO TOP -->
+                        <div class="relative p-[3px] rounded-3xl bg-gradient-brand shadow-xl">
+                            <div class="bg-white rounded-[21px] p-6 md:p-8 relative overflow-hidden">
+                                <div class="absolute top-0 right-0 w-64 h-64 bg-pink-50 rounded-full blur-3xl -z-10 translate-x-1/2 -translate-y-1/2 opacity-50"></div>
+                                
+                                <div class="absolute top-0 right-0 bg-gradient-brand text-white text-xs font-bold px-4 py-2 rounded-bl-2xl shadow-sm z-10 flex items-center gap-2">
+                                    ${I.Sparkles({size: 14})} Smart Routing Feature
                                 </div>
 
-                                <div class="border border-slate-200 rounded-xl p-3 flex justify-between items-center bg-white relative hover:border-[#FF6B6B]">
-                                    <div class="text-slate-400">${I.DollarSign({size: 18})}</div>
-                                    <select onchange="updateState('search', 'salaryRange', this.value)" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
-                                        <option value="" ${!s.salaryRange ? 'selected' : ''}>ช่วงเงินเดือน</option>
-                                        <option value="<20k" ${s.salaryRange === '<20k' ? 'selected' : ''}>ไม่เกิน 20,000 บาท</option>
-                                        <option value="20k-30k" ${s.salaryRange === '20k-30k' ? 'selected' : ''}>20,000 - 30,000 บาท</option>
-                                        <option value="30k-50k" ${s.salaryRange === '30k-50k' ? 'selected' : ''}>30,000 - 50,000 บาท</option>
-                                    </select>
-                                    <div class="flex-1 ml-2 text-sm text-slate-700 truncate">${s.salaryRange ? 'เลือกแล้ว' : '<span class="text-slate-400">ช่วงเงินเดือน</span>'}</div>
-                                    <div class="text-slate-400">${I.ChevronRight({size: 18})}</div>
-                                </div>
-
-                                <div>
-                                    <span class="font-medium text-sm text-slate-700 block mb-3">รูปแบบการทำงาน</span>
-                                    <div class="flex flex-wrap gap-2">
-                                        ${['ทั้งหมด', 'On-site', 'Hybrid', 'Remote'].map(type => `
-                                            <button 
-                                                onclick="updateState('search', 'workType', '${type}')"
-                                                class="px-4 py-2 rounded-full text-sm font-medium transition-all ${s.workType === type ? 'bg-[#FF3F70] text-white shadow-md' : 'bg-white border border-slate-200 text-slate-600 hover:border-[#FF6B6B]'}"
-                                            >
-                                                ${type}
-                                            </button>
-                                        `).join('')}
+                                <div class="flex flex-col lg:flex-row gap-8 items-start lg:items-center relative z-10">
+                                    <div class="w-full lg:w-1/3">
+                                        <h2 class="text-2xl font-bold text-[#1E293B] mb-2 flex items-center gap-3">
+                                            <div class="bg-pink-100 p-2.5 rounded-xl text-[#FF3F70] shadow-inner">${I.MapPin({size: 24})}</div>
+                                            ค้นหาจากการเดินทาง
+                                        </h2>
+                                        <p class="text-slate-500 text-sm leading-relaxed pr-4">หางานที่ใช่ ในระยะทางและเวลาที่คุณเดินทางไหว ให้ AI ช่วยคำนวณเส้นทางที่ดีที่สุดสำหรับคุณ</p>
                                     </div>
-                                </div>
 
-                                <div class="pt-4 border-t border-slate-100">
-                                    <span class="font-medium text-sm text-slate-700 block mb-3">การเดินทาง</span>
-                                    <div class="space-y-4">
-                                        <label class="flex items-center gap-2 text-sm text-slate-600 cursor-pointer">
-                                            <input type="checkbox" ${s.useCurrentLoc ? 'checked' : ''} onchange="updateState('search', 'useCurrentLoc', this.checked)" class="w-4 h-4 rounded text-[#FF6B6B] focus:ring-[#FF6B6B] accent-[#FF6B6B]" />
-                                            ใช้ตำแหน่งปัจจุบันของฉัน
-                                        </label>
-                                        <div class="space-y-1">
-                                            <div class="flex justify-between items-center text-sm">
-                                                <span class="text-slate-500">ระยะทาง</span>
-                                                <span class="font-bold text-[#FF3F70]" id="lbl-radius">${s.radius} กม.</span>
+                                    <div class="w-full lg:w-2/3 grid grid-cols-1 md:grid-cols-2 gap-6 bg-slate-50/50 p-6 rounded-2xl border border-slate-100">
+                                        <div class="space-y-5">
+                                            <label class="flex items-center gap-3 text-sm text-slate-700 cursor-pointer font-bold hover:text-[#FF3F70] transition-colors bg-white p-3 rounded-xl border border-slate-200 shadow-sm">
+                                                <input type="checkbox" ${s.useCurrentLoc ? 'checked' : ''} onchange="updateState('search', 'useCurrentLoc', this.checked)" class="w-5 h-5 rounded text-[#FF6B6B] focus:ring-[#FF6B6B] accent-[#FF6B6B]" />
+                                                ใช้ตำแหน่งปัจจุบันของฉัน
+                                            </label>
+                                            
+                                            <div class="space-y-3 bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+                                                <div class="flex justify-between items-center text-sm">
+                                                    <span class="text-slate-600 font-bold flex items-center gap-2">${I.Search({size:16})} ระยะทางครอบคลุม</span>
+                                                    <span class="font-bold text-[#FF3F70] bg-pink-50 px-3 py-1 rounded-lg border border-pink-100" id="lbl-radius">${s.radius} กม.</span>
+                                                </div>
+                                                <input type="range" min="1" max="50" value="${s.radius}" oninput="document.getElementById('lbl-radius').innerText = this.value + ' กม.'" onchange="updateState('search', 'radius', this.value)" class="w-full accent-[#FF3F70] h-2 bg-slate-100 rounded-lg appearance-none cursor-pointer" />
                                             </div>
-                                            <input type="range" min="1" max="50" value="${s.radius}" oninput="document.getElementById('lbl-radius').innerText = this.value + ' กม.'" onchange="updateState('search', 'radius', this.value)" class="w-full accent-[#FF3F70] h-2 bg-pink-100 rounded-lg appearance-none cursor-pointer" />
                                         </div>
-                                        <div class="space-y-1 mt-6 mb-4">
-                                            <div class="flex justify-between items-center text-sm mb-2">
-                                                <span class="text-slate-500">ระยะเวลาการเดินทาง</span>
-                                                <span class="font-bold text-[#FF3F70]" id="lbl-time">ไม่เกิน ${s.maxTravelTime} นาที</span>
+
+                                        <div class="space-y-5">
+                                            <div class="space-y-3 bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+                                                <div class="flex justify-between items-center text-sm">
+                                                    <span class="text-slate-600 font-bold flex items-center gap-2">${I.Clock({size:16})} เวลาเดินทางสูงสุด</span>
+                                                    <span class="font-bold text-[#FF3F70] bg-pink-50 px-3 py-1 rounded-lg border border-pink-100" id="lbl-time">ไม่เกิน ${s.maxTravelTime} นาที</span>
+                                                </div>
+                                                <input type="range" min="10" max="120" step="5" value="${s.maxTravelTime}" oninput="document.getElementById('lbl-time').innerText = 'ไม่เกิน ' + this.value + ' นาที'" onchange="updateState('search', 'maxTravelTime', this.value)" class="w-full accent-[#FF3F70] h-2 bg-slate-100 rounded-lg appearance-none cursor-pointer" />
                                             </div>
-                                            <input type="range" min="10" max="120" step="5" value="${s.maxTravelTime}" oninput="document.getElementById('lbl-time').innerText = 'ไม่เกิน ' + this.value + ' นาที'" onchange="updateState('search', 'maxTravelTime', this.value)" class="w-full accent-[#FF3F70] h-2 bg-pink-100 rounded-lg appearance-none cursor-pointer" />
-                                        </div>
-                                        <div class="flex flex-wrap gap-2">
-                                            ${['BTS', 'MRT', 'รถเมล์', 'รถยนต์', 'เดินได้'].map(t => `
-                                                <button 
-                                                    onclick="toggleTransport('${t}')"
-                                                    class="px-3 py-1.5 rounded-xl text-xs font-medium transition-all flex items-center gap-1 ${s.transports.includes(t) ? 'bg-orange-50 text-orange-600 border border-orange-200 shadow-sm' : 'bg-white text-slate-500 border border-slate-200 hover:border-orange-300'}"
-                                                >
-                                                    ${t === 'BTS' ? I.Train({size: 12}) : ''}
-                                                    ${t === 'MRT' ? I.Train({size: 12}) : ''}
-                                                    ${t === 'รถเมล์' ? I.Bus({size: 12}) : ''}
-                                                    ${t === 'รถยนต์' ? I.Car({size: 12}) : ''}
-                                                    ${t}
-                                                </button>
-                                            `).join('')}
+
+                                            <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm">
+                                                <span class="text-xs font-bold text-slate-500 mb-2 block">รูปแบบการเดินทางที่คุณสะดวก</span>
+                                                <div class="flex flex-wrap gap-2">
+                                                    ${['BTS', 'MRT', 'รถเมล์', 'รถยนต์', 'เดินได้'].map(t => `
+                                                        <button 
+                                                            onclick="toggleTransport('${t}')"
+                                                            class="px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 ${s.transports.includes(t) ? 'bg-gradient-brand text-white shadow-md transform scale-105' : 'bg-slate-50 text-slate-500 border border-slate-200 hover:border-[#FF3F70] hover:text-[#FF3F70]'}"
+                                                        >
+                                                            ${t === 'BTS' || t === 'MRT' ? I.Train({size: 14}) : ''}
+                                                            ${t === 'รถเมล์' ? I.Bus({size: 14}) : ''}
+                                                            ${t === 'รถยนต์' ? I.Car({size: 14}) : ''}
+                                                            ${t}
+                                                        </button>
+                                                    `).join('')}
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="lg:col-span-3 space-y-6">
-                            ${filteredJobs.map(job => `
-                                <div onclick="setView('job_detail')" class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:border-[#FF6B6B] transition-colors cursor-pointer flex gap-6">
-                                    <div class="w-16 h-16 rounded-xl flex items-center justify-center font-bold text-xl ${job.logo}">
-                                        ${job.company.charAt(0)}
+                        <!-- STANDARD FILTERS WITH LOCATION -->
+                        <div class="bg-white p-4 md:p-6 rounded-2xl shadow-sm border border-slate-200">
+                            <div class="flex flex-col lg:flex-row gap-4 items-center">
+                                
+                                <div class="relative w-full lg:w-1/3">
+                                    <div class="absolute left-4 top-1/2 -translate-y-1/2 text-[#FF6B6B]">${I.Search({size: 18})}</div>
+                                    <input type="text" placeholder="ค้นหาชื่อบริษัท หรือ คีย์เวิร์ด..." class="w-full pl-12 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-[#FF6B6B] focus:bg-white text-sm font-medium transition-colors" />
+                                </div>
+
+                                <div class="w-full lg:w-2/3 grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <div class="border border-slate-200 rounded-xl p-3.5 flex justify-between items-center bg-slate-50 hover:bg-white relative hover:border-[#FF6B6B] transition-colors cursor-pointer group">
+                                        <div class="text-slate-400 group-hover:text-[#FF6B6B] transition-colors">${I.MapPin({size: 18})}</div>
+                                        <select onchange="updateState('search', 'location', this.value)" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+                                            <option value="" ${!s.location ? 'selected' : ''}>พื้นที่ / เขต</option>
+                                            <option value="ปทุมวัน" ${s.location === 'ปทุมวัน' ? 'selected' : ''}>ปทุมวัน</option>
+                                            <option value="สาทร" ${s.location === 'สาทร' ? 'selected' : ''}>สาทร</option>
+                                            <option value="บางรัก" ${s.location === 'บางรัก' ? 'selected' : ''}>บางรัก</option>
+                                            <option value="ห้วยขวาง" ${s.location === 'ห้วยขวาง' ? 'selected' : ''}>ห้วยขวาง</option>
+                                            <option value="จตุจักร" ${s.location === 'จตุจักร' ? 'selected' : ''}>จตุจักร</option>
+                                            <option value="Bangkok" ${s.location === 'Bangkok' ? 'selected' : ''}>กรุงเทพ (ทั้งหมด)</option>
+                                        </select>
+                                        <div class="flex-1 ml-3 text-sm text-slate-700 truncate font-bold">${s.location || '<span class="text-slate-400 font-medium">พื้นที่ / เขต</span>'}</div>
+                                        <div class="text-slate-400 group-hover:text-[#FF3F70]">${I.ChevronRight({size: 18})}</div>
                                     </div>
-                                    <div class="flex-1">
-                                        <div class="flex justify-between items-start mb-2">
-                                            <div>
-                                                <h3 class="font-bold text-lg">${job.title}</h3>
-                                                <p class="text-slate-500 text-sm">${job.company}</p>
-                                            </div>
-                                            <div class="text-right">
-                                                <div class="text-green-500 font-bold text-sm bg-green-50 px-2 py-1 rounded-md mb-1">Match ${job.match}%</div>
-                                            </div>
-                                        </div>
-                                        <div class="flex flex-wrap gap-4 text-sm text-slate-600 mb-4">
-                                            <div class="flex items-center gap-1">${I.MapPin({size: 16})} ${job.location}</div>
-                                            <div class="flex items-center gap-1">${I.DollarSign({size: 16})} ${job.salary}</div>
-                                            <div class="flex items-center gap-1">${I.Briefcase({size: 16})} ${job.type}</div>
-                                        </div>
-                                        <div class="flex gap-2">
-                                            ${job.skills.map(skill => `
-                                                <span class="bg-slate-100 text-slate-600 px-3 py-1 rounded-full text-xs font-medium">${skill}</span>
-                                            `).join('')}
-                                        </div>
+
+                                    <div class="border border-slate-200 rounded-xl p-3.5 flex justify-between items-center bg-slate-50 hover:bg-white relative hover:border-[#FF6B6B] transition-colors cursor-pointer group">
+                                        <div class="text-slate-400 group-hover:text-[#FF6B6B] transition-colors">${I.Briefcase({size: 18})}</div>
+                                        <select onchange="updateState('search', 'jobCategory', this.value)" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+                                            <option value="" ${!s.jobCategory ? 'selected' : ''}>ตำแหน่งงาน</option>
+                                            <option value="UX/UI Designer" ${s.jobCategory === 'UX/UI Designer' ? 'selected' : ''}>UX/UI Designer</option>
+                                            <option value="Developer" ${s.jobCategory === 'Developer' ? 'selected' : ''}>Developer</option>
+                                            <option value="Data Scientist" ${s.jobCategory === 'Data Scientist' ? 'selected' : ''}>Data Scientist</option>
+                                        </select>
+                                        <div class="flex-1 ml-3 text-sm text-slate-700 truncate font-bold">${s.jobCategory || '<span class="text-slate-400 font-medium">ตำแหน่งงาน</span>'}</div>
+                                        <div class="text-slate-400 group-hover:text-[#FF3F70]">${I.ChevronRight({size: 18})}</div>
+                                    </div>
+
+                                    <div class="border border-slate-200 rounded-xl p-3.5 flex justify-between items-center bg-slate-50 hover:bg-white relative hover:border-[#FF6B6B] transition-colors cursor-pointer group">
+                                        <div class="text-slate-400 group-hover:text-[#FF6B6B] transition-colors">${I.BahtSign({size: 18})}</div>
+                                        <select onchange="updateState('search', 'salaryRange', this.value)" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+                                            <option value="" ${!s.salaryRange ? 'selected' : ''}>ช่วงเงินเดือน</option>
+                                            <option value="<20k" ${s.salaryRange === '<20k' ? 'selected' : ''}>ไม่เกิน ฿20,000</option>
+                                            <option value="20k-30k" ${s.salaryRange === '20k-30k' ? 'selected' : ''}>฿20,000 - 30,000</option>
+                                            <option value="30k-50k" ${s.salaryRange === '30k-50k' ? 'selected' : ''}>฿30,000 - 50,000</option>
+                                        </select>
+                                        <div class="flex-1 ml-3 text-sm text-slate-700 truncate font-bold">${formatSalaryLabel(s.salaryRange)}</div>
+                                        <div class="text-slate-400 group-hover:text-[#FF3F70]">${I.ChevronRight({size: 18})}</div>
                                     </div>
                                 </div>
-                            `).join('')}
+                            </div>
+
+                            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mt-5 pt-5 border-t border-slate-100 gap-4">
+                                <div class="flex flex-wrap items-center gap-2">
+                                    <span class="font-bold text-sm text-slate-700 mr-2 flex items-center gap-1">${I.Building2({size: 16})} รูปแบบงาน:</span>
+                                    ${['ทั้งหมด', 'On-site', 'Hybrid', 'Remote'].map(type => `
+                                        <button 
+                                            onclick="updateState('search', 'workType', '${type}')"
+                                            class="px-4 py-1.5 rounded-full text-xs font-bold transition-all ${s.workType === type ? 'bg-[#FF3F70] text-white shadow-md' : 'bg-white border border-slate-200 text-slate-600 hover:border-[#FF6B6B] hover:text-[#FF6B6B]'}"
+                                        >
+                                            ${type}
+                                        </button>
+                                    `).join('')}
+                                </div>
+                                <button onclick="resetSearch()" class="text-slate-400 text-sm font-bold hover:text-[#FF3F70] flex items-center gap-1 bg-slate-50 px-3 py-1.5 rounded-lg hover:bg-pink-50 transition-colors">
+                                    ${I.Settings2({size: 16})} ล้างค่าทั้งหมด
+                                </button>
+                            </div>
                         </div>
+
+                        <!-- JOB LIST -->
+                        <div class="space-y-4">
+                            <h3 class="font-bold text-xl text-slate-800 flex items-center gap-2">
+                                ผลการค้นหา <span class="bg-[#1E293B] text-white text-sm px-2.5 py-0.5 rounded-full">${filteredJobs.length} ตำแหน่ง</span>
+                            </h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                ${filteredJobs.length > 0 ? filteredJobs.map(job => `
+                                    <div onclick="setView('job_detail')" class="bg-white p-6 md:p-8 rounded-[2rem] shadow-sm border border-slate-200 hover:border-[#FF6B6B] hover:shadow-lg hover:-translate-y-1 transition-all cursor-pointer group flex flex-col h-full">
+                                        <div class="flex gap-5 mb-6">
+                                            <div class="w-16 h-16 rounded-2xl flex flex-shrink-0 items-center justify-center font-bold text-2xl shadow-sm border border-slate-100 ${job.logo}">
+                                                ${job.company.charAt(0)}
+                                            </div>
+                                            <div class="flex-1">
+                                                <div class="flex justify-between items-start mb-1">
+                                                    <h3 class="font-bold text-xl text-[#1E293B] group-hover:text-[#FF3F70] transition-colors">${job.title}</h3>
+                                                </div>
+                                                <p class="text-slate-500 text-sm font-medium">${job.company}</p>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="flex flex-col gap-3 text-sm text-slate-600 mb-6 bg-slate-50/50 p-4 rounded-xl border border-slate-100">
+                                            <div class="flex items-center gap-2.5">
+                                                <div class="w-6 h-6 rounded-full bg-white flex items-center justify-center shadow-sm text-slate-400">${I.MapPin({size: 14})}</div> 
+                                                <span class="font-medium">${job.location}</span>
+                                            </div>
+                                            <div class="flex items-center gap-2.5">
+                                                <div class="w-6 h-6 rounded-full bg-white flex items-center justify-center shadow-sm text-[#FF6B6B]">${I.BahtSign({size: 14})}</div> 
+                                                <span class="font-bold text-[#1E293B]">${job.salary}</span>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="flex flex-wrap items-center gap-2 mt-auto">
+                                            <div class="text-green-600 font-bold text-xs bg-green-50 px-3 py-1.5 rounded-lg border border-green-100 flex items-center gap-1 shadow-sm">
+                                                ${I.Sparkles({size: 12})} Match ${job.match}%
+                                            </div>
+                                            <span class="bg-white border border-slate-200 text-slate-600 px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1 shadow-sm">
+                                                ${I.Briefcase({size: 12})} ${job.type}
+                                            </span>
+                                            ${job.skills.slice(0, 2).map(skill => `
+                                                <span class="bg-pink-50 border border-pink-100 text-[#FF3F70] px-3 py-1.5 rounded-lg text-xs font-bold shadow-sm">${skill}</span>
+                                            `).join('')}
+                                            ${job.skills.length > 2 ? `<span class="text-xs text-slate-400 font-bold pl-1">+${job.skills.length - 2}</span>` : ''}
+                                        </div>
+                                    </div>
+                                `).join('') : `
+                                    <div class="col-span-1 md:col-span-2 py-12 text-center bg-white rounded-3xl border border-slate-200 border-dashed">
+                                        <div class="text-slate-300 flex justify-center mb-4">${I.Search({size: 48})}</div>
+                                        <h3 class="text-lg font-bold text-slate-700 mb-2">ไม่พบตำแหน่งงานที่ค้นหา</h3>
+                                        <p class="text-slate-500">ลองปรับเปลี่ยนเงื่อนไขการค้นหา หรือขยายพื้นที่ให้กว้างขึ้น</p>
+                                    </div>
+                                `}
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             `;
@@ -787,7 +859,7 @@
                             <div class="space-y-3 text-slate-600 font-medium text-sm mb-6">
                                 <div class="flex items-center gap-3"><div class="text-slate-400">${I.MapPin({size: 18})}</div> Siam Paragon Tower, กรุงเทพมหานคร</div>
                                 <div class="flex items-center gap-3"><div class="text-slate-400">${I.Building2({size: 18})}</div> Hybrid (เข้าออฟฟิศ 2-3 วัน/สัปดาห์)</div>
-                                <div class="flex items-center gap-3"><div class="text-slate-400">${I.DollarSign({size: 18})}</div> 25,000 - 40,000 บาท</div>
+                                <div class="flex items-center gap-3"><div class="text-slate-400">${I.BahtSign({size: 18})}</div> ฿25,000 - 40,000</div>
                             </div>
                         </div>
 
